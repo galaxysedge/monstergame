@@ -33,7 +33,7 @@ monImage.src = "images/monster.png"
 // Game objects
 
 var hero = {
-    speed: 256,
+    speed: 8*canvas.tilesize,
     x: 0,
     y: 0
 };
@@ -58,8 +58,9 @@ addEventListener("keyup", function (e) {
 // New game
 
 var reset = function () {
-    hero.x = canvas.width / 2;
-    hero.y = canvas.height / 2;
+    //hero.x = canvas.width / 2; 
+    //hero.y = canvas.height / 2;
+		//don't want hero position to reset
     
     monster.x = 32 + (Math.random() * (canvas.width - 64));
     monster.y = 32 + (Math.random() * (canvas.height - 64))
@@ -112,7 +113,7 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Monsterrs caught: " + monstersCaught, 32, 32);
+	ctx.fillText("Monsters caught: " + monstersCaught, 32, 32);
 }
 
 // Main game loop
