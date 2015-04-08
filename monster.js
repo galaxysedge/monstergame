@@ -33,9 +33,9 @@ monImage.src = "images/monster.png"
 // Game objects
 
 var hero = {
-    speed: 8*canvas.tilesize,
-    x: 0,
-    y: 0
+    speed: 8,
+    x: Math.round(canvas.x/2),
+    y: Math.round(canvas.y/2)
 };
 var monster = {
     x: 0,
@@ -62,31 +62,31 @@ var reset = function () {
     //hero.y = canvas.height / 2;
 		//don't want hero position to reset
     
-    monster.x = 32 + (Math.random() * (canvas.width - 64));
-    monster.y = 32 + (Math.random() * (canvas.height - 64))
+    monster.x = 1 + Math.round((Math.random() * (canvas.x - 2)));
+    monster.y = 1 + Math.round((Math.random() * (canvas.y - 2)))
 };
 
 // Update objects
 var update = function (modifier) {
     if (38 in keysDown) { //Up
-        hero.y -= hero.speed * modifier;
+        hero.y -= Math.round(hero.speed * modifier);
     }
     if (40 in keysDown) { //Down
-        hero.y += hero.speed * modifier;
+        hero.y += Math.round(hero.speed * modifier);
     }
     if (37 in keysDown) { //Left
-        hero.x -= hero.speed * modifier;
+        hero.x -= Math.round(hero.speed * modifier);
     }
     if (39 in keysDown) { //Right
-        hero.x += hero.speed * modifier;
+        hero.x += Math.round(hero.speed * modifier);
     }
     
     // Are they touching?
     if (
-        hero.x <= (monster.x + 32)
-        && monster.x <= (hero.x + 32)
-        && hero.y <= (monster.y + 32)
-        && monster.y <= (hero.y + 32)
+        hero.x <= (monster.x + 1)
+        && monster.x <= (hero.x + 1)
+        && hero.y <= (monster.y + 1)
+        && monster.y <= (hero.y + 1)
     ) {
         ++monstersCaught;
         reset();
@@ -101,11 +101,11 @@ var render = function () {
     }
     
     if (heroReady) {
-        ctx.drawImage(heroImage, hero.x, hero.y);
+        ctx.drawImage(heroImage, hero.x*canvas.tilesize, hero.y*canvas.tilesize);
     }
     
     if (monReady) {
-        ctx.drawImage(monImage, monster.x, monster.y);
+        ctx.drawImage(monImage, monster.x*canvas.tilesize, monster.y*canvas.tilesize);
     }
     
     // Score
@@ -136,4 +136,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 var then = Date.now();
 reset();
+
 main();
