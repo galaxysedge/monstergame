@@ -33,9 +33,10 @@ monImage.src = "images/monster.png"
 // Game objects
 
 var hero = {
-    speed: 8,
+    //speed: 8,
     x: Math.round(canvas.x/2),
     y: Math.round(canvas.y/2)
+	
 };
 var monster = {
     x: 0,
@@ -48,12 +49,15 @@ var monstersCaught = 0;
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
-    keysDown[e.keyCode] = true;
+	if (! (e.keyCode in keysDown)) {
+		keysDown[e.keyCode] = 0;
+	}
+	keysDown[e.keyCode] ++;
 }, false);
 
-addEventListener("keyup", function (e) {
-    delete keysDown[e.keyCode];
-}, false);
+//addEventListener("keyup", function (e) {
+ //   delete keysDown[e.keyCode];
+//}, false);
 
 // New game
 
@@ -69,24 +73,25 @@ var reset = function () {
 // Update objects
 var update = function (modifier) {
     if (38 in keysDown) { //Up
-        hero.y -= Math.round(hero.speed * modifier);
+        hero.y -= keysDown[38];
+		delete keysDown[38];
     }
     if (40 in keysDown) { //Down
-        hero.y += Math.round(hero.speed * modifier);
+        hero.y += keysDown[40];
+		delete keysDown[40];
     }
     if (37 in keysDown) { //Left
-        hero.x -= Math.round(hero.speed * modifier);
+        hero.x -= keysDown[37];
+		delete keysDown[37];
     }
     if (39 in keysDown) { //Right
-        hero.x += Math.round(hero.speed * modifier);
+        hero.x += keysDown[39];
+		delete keysDown[39];
     }
     
     // Are they touching?
     if (
-        hero.x <= (monster.x + 1)
-        && monster.x <= (hero.x + 1)
-        && hero.y <= (monster.y + 1)
-        && monster.y <= (hero.y + 1)
+		hero.x == monster.x && hero.y == monster.y
     ) {
         ++monstersCaught;
         reset();
@@ -136,5 +141,6 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 var then = Date.now();
 reset();
+console.log(hero.x, hero.y, monster.x, monster.y )
 
 main();
