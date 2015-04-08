@@ -14,21 +14,21 @@ document.body.appendChild(canvas);
 var bgReady = false;
 var bgImage = new Image();
 bgImage.onload = function() {bgReady = true;};
-bgImage.src = "images/background.png";
+bgImage.src = "images/desert.png";
 
 // hero image
 
 var heroReady = false;
 var heroImage = new Image();
 heroImage.onload = function () {heroReady = true;};
-heroImage.src = "images/hero.png";
+heroImage.src = "images/cat.png";
 
 // monster image
 
 var monReady = false;
 var monImage = new Image();
 monImage.onload = function () {monReady = true;};
-monImage.src = "images/monster.png"
+monImage.src = "images/mouse.png"
 
 // Game objects
 
@@ -46,9 +46,13 @@ var monstersCaught = 0;
 
 // Player input
 
+var eventQ = [];
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
+
+
+
 	if (! (e.keyCode in keysDown)) {
 		keysDown[e.keyCode] = 0;
 	}
@@ -80,20 +84,24 @@ var mov = {
 };
 
 var update = function (modifier) {
-		delete keysDown[38];
-    }
-    if (40 in keysDown) { //Down
-        hero.y += keysDown[40];
-		delete keysDown[40];
-    }
-    if (37 in keysDown) { //Left
-        hero.x -= keysDown[37];
-		delete keysDown[37];
-    }
-    if (39 in keysDown) { //Right
-        hero.x += keysDown[39];
-		delete keysDown[39];
-    }
+// check event queue (list of keycodes - keysdown)
+// if not empty, process first item
+// check direction, start moving (record original position)
+// at end of the move, check if you've moved at least one tile
+// check if integer boundary crossed, if so then delete item and then:
+// if next event is same direction, carry on
+// otherwise, truncate original position and add one 
+
+
+
+	for (var keyCode in keysDown) {
+		if (keyCode in mov) {
+			hero.x += mov[keyCode][0];
+			hero.y += mov[keyCode][1];
+		}
+		delete keysDown[keyCode];
+	}
+
     
     // Are they touching?
     if (
@@ -124,7 +132,7 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Monsters caught: " + monstersCaught, 32, 32);
+	ctx.fillText("Mice caught: " + monstersCaught, 32, 32);
 }
 
 // Main game loop
