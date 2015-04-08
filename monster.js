@@ -71,9 +71,15 @@ var reset = function () {
 };
 
 // Update objects
+
+var mov = {
+	37: [-1,0], //Left
+	38: [0,-1], //Up
+	39: [1,0 ], //Right
+	40: [0,1 ] //Down
+};
+
 var update = function (modifier) {
-    if (38 in keysDown) { //Up
-        hero.y -= keysDown[38];
 		delete keysDown[38];
     }
     if (40 in keysDown) { //Down
