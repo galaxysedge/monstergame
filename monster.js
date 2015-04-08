@@ -1,9 +1,11 @@
 var canvas = document.createElement("canvas");
 
 var ctx = canvas.getContext("2d");
-
-canvas.width = 512;
-canvas.height = 480;
+canvas.x = 16; // number of tiles across
+canvas.y = 15; // number of tiles down
+canvas.tilesize = 32;
+canvas.width = canvas.x*canvas.tilesize;
+canvas.height = canvas.y*canvas.tilesize;
 
 document.body.appendChild(canvas);
 
