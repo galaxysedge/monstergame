@@ -33,7 +33,7 @@ monImage.src = "images/mouse.png"
 // Game objects
 
 var hero = {
-    //speed: 8,
+    speed: 8,
     x: Math.round(canvas.x/2),
     y: Math.round(canvas.y/2)
 	
@@ -47,28 +47,23 @@ var monstersCaught = 0;
 // Player input
 
 var eventQ = [];
-var keysDown = {};
+//var keysDown = {};
 
 addEventListener("keydown", function (e) {
+	eventQ.push(e.keyCode);
 
 
-
-	if (! (e.keyCode in keysDown)) {
+/* 	if (! (e.keyCode in keysDown)) {
 		keysDown[e.keyCode] = 0;
 	}
-	keysDown[e.keyCode] ++;
+	keysDown[e.keyCode] ++; */
 }, false);
 
-//addEventListener("keyup", function (e) {
- //   delete keysDown[e.keyCode];
-//}, false);
 
 // New game
 
 var reset = function () {
-    //hero.x = canvas.width / 2; 
-    //hero.y = canvas.height / 2;
-		//don't want hero position to reset
+
     
     monster.x = 1 + Math.round((Math.random() * (canvas.x - 2)));
     monster.y = 1 + Math.round((Math.random() * (canvas.y - 2)))
@@ -84,6 +79,31 @@ var mov = {
 };
 
 var update = function (modifier) {
+	var oldx = hero.x;
+	var oldy = hero.y;
+	if (eventQ.length != 0) {
+		// Move the hero
+		var e = eventQ[0];
+		if( e in mov ) {
+			var dir = mov[e]; 
+			hero.x += hero.speed*modifier*dir[0];
+			hero.y += hero.speed*modifier*dir[1];
+			// Check if integer boundary has passed
+			if (Math.floor(oldx).toPrecision(1) != Math.floor(hero.x).toPrecision(1)) {
+				if (eventQ.length <= 1 || eventQ[0] != eventQ[1]) {
+					hero.x = Math.floor(oldx)+dir[0];
+				}
+				eventQ.shift();
+			}
+			else if (Math.floor(oldy).toPrecision(1) != Math.floor(hero.y).toPrecision(1) ) {
+				if (eventQ.length <= 1 || eventQ[0] != eventQ[1]) {
+					hero.y = Math.floor(oldy)+dir[1];
+				}
+				eventQ.shift();
+			};
+		}
+	};		
+
 // check event queue (list of keycodes - keysdown)
 // if not empty, process first item
 // check direction, start moving (record original position)
@@ -94,13 +114,13 @@ var update = function (modifier) {
 
 
 
-	for (var keyCode in keysDown) {
+/* 	for (var keyCode in keysDown) {
 		if (keyCode in mov) {
 			hero.x += mov[keyCode][0];
 			hero.y += mov[keyCode][1];
 		}
 		delete keysDown[keyCode];
-	}
+	} */
 
     
     // Are they touching?
@@ -128,7 +148,7 @@ var render = function () {
     }
     
     // Score
-    ctx.fillStyle = "rgb(250, 250, 250)";
+    ctx.fillStyle = "rgb(0, 0, 0)";
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
@@ -155,6 +175,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 var then = Date.now();
 reset();
-console.log(hero.x, hero.y, monster.x, monster.y )
 
 main();
