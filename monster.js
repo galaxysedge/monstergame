@@ -78,6 +78,9 @@ var mov = {
 	40: [0,1 ] //Down
 };
 
+
+var epsilon = 0.00000001;
+
 var update = function (modifier) {
 	var oldx = hero.x;
 	var oldy = hero.y;
@@ -89,15 +92,16 @@ var update = function (modifier) {
 			hero.x += hero.speed*modifier*dir[0];
 			hero.y += hero.speed*modifier*dir[1];
 			// Check if integer boundary has passed
-			if (Math.floor(oldx).toPrecision(1) != Math.floor(hero.x).toPrecision(1)) {
+			if (Math.floor(oldx + epsilon*dir[0]).toFixed(0) != Math.floor(hero.x).toFixed(0)) {
+			
 				if (eventQ.length <= 1 || eventQ[0] != eventQ[1]) {
-					hero.x = Math.floor(oldx)+dir[0];
+					hero.x = Math.floor(oldx+(dir[0]+1)/2);
 				}
 				eventQ.shift();
 			}
-			else if (Math.floor(oldy).toPrecision(1) != Math.floor(hero.y).toPrecision(1) ) {
+			else if (Math.floor(oldy + epsilon*dir[1]).toFixed(0) != Math.floor(hero.y).toFixed(0) ) {
 				if (eventQ.length <= 1 || eventQ[0] != eventQ[1]) {
-					hero.y = Math.floor(oldy)+dir[1];
+					hero.y = Math.floor(oldy + (dir[1]+1)/2);
 				}
 				eventQ.shift();
 			};
